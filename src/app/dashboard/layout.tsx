@@ -104,11 +104,8 @@ export default function DashboardLayout({
                   />
                 </svg>
               </button>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
-                  JD
-                </div>
-                <span className="text-slate-700 dark:text-slate-200">John Doe</span>
+              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
+                JD
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import millify from "millify";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 // Mock data for the chart
@@ -88,9 +89,6 @@ export default function DashboardPage() {
               </p>
               <p className="text-2xl font-semibold text-slate-900 dark:text-white mt-2">6</p>
             </div>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
-              4 slots left
-            </span>
           </div>
         </div>
 
@@ -120,7 +118,15 @@ export default function DashboardPage() {
               <AreaChart data={mockChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="name" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
+                <YAxis
+                  stroke="#94a3b8"
+                  tickFormatter={(value) =>
+                    millify(value, {
+                      precision: 1,
+                      lowercase: false,
+                    })
+                  }
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#1e293b",
@@ -128,6 +134,12 @@ export default function DashboardPage() {
                     borderRadius: "0.5rem",
                     color: "#f8fafc",
                   }}
+                  formatter={(value) =>
+                    millify(value as number, {
+                      precision: 1,
+                      lowercase: false,
+                    })
+                  }
                 />
                 <Area
                   type="monotone"
@@ -148,7 +160,15 @@ export default function DashboardPage() {
               <AreaChart data={mockChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="name" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
+                <YAxis
+                  stroke="#94a3b8"
+                  tickFormatter={(value) =>
+                    millify(value, {
+                      precision: 1,
+                      lowercase: false,
+                    })
+                  }
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#1e293b",
@@ -156,6 +176,12 @@ export default function DashboardPage() {
                     borderRadius: "0.5rem",
                     color: "#f8fafc",
                   }}
+                  formatter={(value) =>
+                    millify(value as number, {
+                      precision: 1,
+                      lowercase: false,
+                    })
+                  }
                 />
                 <Area
                   type="monotone"
