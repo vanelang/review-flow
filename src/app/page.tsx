@@ -307,7 +307,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Integration/CTA Section */}
+      {/* Integration/CTA Section - updated button color to blue */}
       <section
         id="integration"
         className="min-h-[60vh] flex items-center py-32 px-4 sm:px-6 lg:px-8 scroll-mt-20"
@@ -323,7 +323,7 @@ export default function Home() {
           <div className="flex justify-center">
             <a
               href="/docs"
-              className="bg-emerald-600 text-white px-10 py-4 rounded-lg hover:bg-emerald-700 transition font-medium text-lg"
+              className="bg-blue-700 text-white px-10 py-4 rounded-lg hover:bg-blue-800 transition font-medium text-lg"
             >
               View Documentation
             </a>
@@ -331,7 +331,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing Section - restructured to horizontal layout */}
+      {/* Pricing Section */}
       <section
         id="pricing"
         className="min-h-[80vh] flex items-center py-32 px-4 sm:px-6 lg:px-8 bg-white scroll-mt-20"
@@ -339,231 +339,224 @@ export default function Home() {
         <div className="max-w-7xl mx-auto w-full">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-semibold text-slate-900 mb-6">
-              Ready to Get Started?
+              Simple, Transparent Pricing
             </h2>
-            <p className="text-xl text-slate-700">Choose a plan that best fits your needs.</p>
+            <p className="text-xl text-slate-700">Choose the plan that scales with your needs</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {/* Basic Plan */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {/* Basic Plan - Decoy for Pro */}
             <div className="border-2 border-slate-200 rounded-xl p-8 hover:shadow-lg transition">
-              <h3 className="text-2xl font-semibold text-slate-900 mb-4">Basic</h3>
-              <div className="mb-6">
-                <span className="text-4xl font-semibold text-slate-900">$29</span>
-                <span className="text-slate-600">/month</span>
+              <div className="flex flex-col h-full">
+                <div className="mb-8">
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-4">Basic</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-semibold text-slate-900">$39</span>
+                    <span className="text-slate-600">/month</span>
+                  </div>
+                  <p className="text-slate-600">
+                    Perfect for small businesses starting with reviews
+                  </p>
+                </div>
+                <div className="flex-grow">
+                  <ul className="space-y-4 mb-8">
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      500 reviews/month
+                    </li>
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      Basic review widget
+                    </li>
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      Standard API access
+                    </li>
+                  </ul>
+                </div>
+                <button className="w-full bg-slate-100 text-slate-700 px-8 py-4 rounded-lg hover:bg-slate-200 transition font-medium">
+                  Start Free Trial
+                </button>
               </div>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Up to 500 reviews/month
-                </li>
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Basic widgets
-                </li>
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Email support
-                </li>
-              </ul>
-              <button className="w-full bg-blue-700 text-white px-8 py-3 rounded-lg hover:bg-blue-800 transition font-medium">
-                Start Free Trial
-              </button>
             </div>
 
-            {/* Pro Plan */}
-            <div className="border-2 border-blue-200 rounded-xl p-8 hover:shadow-lg transition relative bg-blue-50">
-              <div className="absolute top-0 right-0 bg-blue-700 text-white px-4 py-1 rounded-bl-xl rounded-tr-xl text-sm font-medium">
-                Popular
+            {/* Pro Plan - Featured */}
+            <div className="border-2 border-blue-500 rounded-xl p-8 hover:shadow-xl transition relative bg-white -mt-4 shadow-lg">
+              <div className="absolute -top-5 left-0 right-0 flex justify-center">
+                <span className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium">
+                  Most Popular
+                </span>
               </div>
-              <h3 className="text-2xl font-semibold text-slate-900 mb-4">Pro</h3>
-              <div className="mb-6">
-                <span className="text-4xl font-semibold text-slate-900">$49</span>
-                <span className="text-slate-600">/month</span>
+              <div className="flex flex-col h-full">
+                <div className="mb-8">
+                  <h3 className="text-2xl font-semibold text-blue-700 mb-4">Pro</h3>
+                  <div className="mb-6">
+                    <span className="text-5xl font-semibold text-slate-900">$49</span>
+                    <span className="text-slate-600">/month</span>
+                  </div>
+                  <p className="text-slate-600">Best value for growing businesses</p>
+                </div>
+                <div className="flex-grow">
+                  <ul className="space-y-4 mb-8">
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <span className="font-medium">Unlimited reviews</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <span className="font-medium">All review widgets</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <span className="font-medium">Advanced API features</span>
+                    </li>
+                  </ul>
+                </div>
+                <button className="w-full bg-blue-700 text-white px-8 py-4 rounded-lg hover:bg-blue-800 transition font-medium">
+                  Start Free Trial
+                </button>
               </div>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Up to 2,000 reviews/month
-                </li>
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  All review widgets
-                </li>
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Priority support
-                </li>
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Advanced analytics
-                </li>
-              </ul>
-              <button className="w-full bg-blue-700 text-white px-8 py-3 rounded-lg hover:bg-blue-800 transition font-medium">
-                Start Free Trial
-              </button>
             </div>
 
-            {/* Enterprise Plan */}
-            <div className="border-2 border-slate-200 rounded-xl p-8 hover:shadow-lg transition">
-              <h3 className="text-2xl font-semibold text-slate-900 mb-4">Enterprise</h3>
-              <div className="mb-6">
-                <span className="text-4xl font-semibold text-slate-900">$499</span>
-                <span className="text-slate-600">/month</span>
+            {/* Enterprise Plan - Decoy for Pro */}
+            <div className="border-2 border-slate-200 rounded-xl p-8 hover:shadow-lg transition bg-slate-50">
+              <div className="flex flex-col h-full">
+                <div className="mb-8">
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-4">Scale</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-semibold text-slate-900">$299</span>
+                    <span className="text-slate-600">/month</span>
+                  </div>
+                  <p className="text-slate-600">For high-volume review management</p>
+                </div>
+                <div className="flex-grow">
+                  <ul className="space-y-4 mb-8">
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      Unlimited reviews
+                    </li>
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      Enterprise API limits
+                    </li>
+                    <li className="flex items-center gap-3 text-slate-700">
+                      <svg
+                        className="w-5 h-5 text-blue-700"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      White-label options
+                    </li>
+                  </ul>
+                </div>
+                <button className="w-full border-2 border-slate-300 px-8 py-4 rounded-lg hover:bg-slate-200 transition text-slate-700 font-medium">
+                  Contact Sales
+                </button>
               </div>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Unlimited reviews
-                </li>
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Custom integrations
-                </li>
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Dedicated support
-                </li>
-                <li className="flex items-center gap-3 text-slate-700">
-                  <svg
-                    className="w-5 h-5 text-blue-700"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Custom features
-                </li>
-              </ul>
-              <button className="w-full border-2 border-slate-300 px-8 py-3 rounded-lg hover:bg-slate-100 transition text-slate-700 font-medium">
-                Contact Sales
-              </button>
             </div>
           </div>
         </div>
