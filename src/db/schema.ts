@@ -24,6 +24,7 @@ export const users = pgTable("users", {
   dataRetentionDays: integer("data_retention_days").default(90).notNull(),
   hasAcceptedTerms: boolean("has_accepted_terms").default(false).notNull(),
   termsAcceptedAt: timestamp("terms_accepted_at"),
+  password: text("password").notNull(),
 });
 
 // Plans table

@@ -8,6 +8,13 @@
       "when": 1732355018502,
       "tag": "0000_youthful_scrambler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1732357241638,
+      "tag": "0001_superb_rocket_raccoon",
+      "breakpoints": true
     }
   ]
 }
