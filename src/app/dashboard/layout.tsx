@@ -24,22 +24,12 @@ export default function DashboardLayout({
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
-  // Redirect if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth/signin");
     }
   }, [status, router]);
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
-  const isActivePath = (path: string) => {
-    return pathname === path;
-  };
-
-  // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
@@ -52,6 +42,14 @@ export default function DashboardLayout({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  const isActivePath = (path: string) => {
+    return pathname === path;
+  };
 
   const handleLogout = async () => {
     try {
@@ -66,7 +64,6 @@ export default function DashboardLayout({
     }
   };
 
-  // Get user initials for avatar
   const userInitials =
     session?.user?.name
       ?.split(" ")
@@ -210,7 +207,7 @@ export default function DashboardLayout({
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium hover:bg-blue-700 transition-colors"
+                  className="w-8 h-8 rounded-full bg-blue-600 flex items-center text-sm justify-center text-white font-medium hover:bg-blue-700 transition-colors"
                 >
                   {userInitials}
                 </button>
