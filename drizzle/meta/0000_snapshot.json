@@ -1,5 +1,5 @@
 {
-  "id": "e2607b0d-129a-43de-9d27-574bd0947306",
+  "id": "2105bb65-1836-4e5d-8cb6-aeb8879924ad",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -39,13 +39,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
         "response_time": {
           "name": "response_time",
           "type": "integer",
@@ -57,6 +50,19 @@
           "type": "varchar(45)",
           "primaryKey": false,
           "notNull": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -64,6 +70,166 @@
         "api_usage_user_id_users_id_fk": {
           "name": "api_usage_user_id_users_id_fk",
           "tableFrom": "api_usage",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.audit_log": {
+      "name": "audit_log",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "action": {
+          "name": "action",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "changes": {
+          "name": "changes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ip_address": {
+          "name": "ip_address",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "audit_log_user_id_users_id_fk": {
+          "name": "audit_log_user_id_users_id_fk",
+          "tableFrom": "audit_log",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.data_consent": {
+      "name": "data_consent",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "purpose": {
+          "name": "purpose",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "granted": {
+          "name": "granted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "granted_at": {
+          "name": "granted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ip_address": {
+          "name": "ip_address",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "data_consent_user_id_users_id_fk": {
+          "name": "data_consent_user_id_users_id_fk",
+          "tableFrom": "data_consent",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -104,21 +270,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "reviews_limit": {
-          "name": "reviews_limit",
-          "type": "integer",
+        "billing_period": {
+          "name": "billing_period",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "api_calls_limit": {
-          "name": "api_calls_limit",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "widgets_limit": {
-          "name": "widgets_limit",
-          "type": "integer",
+        "limits": {
+          "name": "limits",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
@@ -127,6 +287,13 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
         },
         "created_at": {
           "name": "created_at",
@@ -212,6 +379,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "author_consent": {
+          "name": "author_consent",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "status": {
           "name": "status",
           "type": "text",
@@ -232,6 +406,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "ip_address": {
+          "name": "ip_address",
+          "type": "varchar(45)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -245,6 +425,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "scheduled_for_deletion": {
+          "name": "scheduled_for_deletion",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -386,8 +572,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.usage_logs": {
-      "name": "usage_logs",
+    "public.usage_limits": {
+      "name": "usage_limits",
       "schema": "",
       "columns": {
         "id": {
@@ -402,19 +588,6 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
-        },
-        "metric": {
-          "name": "metric",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "count": {
-          "name": "count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
         },
         "period_start": {
           "name": "period_start",
@@ -428,106 +601,29 @@
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "reviews_count": {
+          "name": "reviews_count",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "default": 0
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
+        "api_calls_count": {
+          "name": "api_calls_count",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "usage_logs_user_id_users_id_fk": {
-          "name": "usage_logs_user_id_users_id_fk",
-          "tableFrom": "usage_logs",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.user_subscriptions": {
-      "name": "user_subscriptions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "default": 0
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "plan_id": {
-          "name": "plan_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
+        "widgets_count": {
+          "name": "widgets_count",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "default": "'active'"
+          "default": 0
         },
-        "current_period_start": {
-          "name": "current_period_start",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "current_period_end": {
-          "name": "current_period_end",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cancel_at": {
-          "name": "cancel_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "canceled_at": {
-          "name": "canceled_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
+        "last_updated": {
+          "name": "last_updated",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -536,25 +632,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_subscriptions_user_id_users_id_fk": {
-          "name": "user_subscriptions_user_id_users_id_fk",
-          "tableFrom": "user_subscriptions",
+        "usage_limits_user_id_users_id_fk": {
+          "name": "usage_limits_user_id_users_id_fk",
+          "tableFrom": "usage_limits",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "user_subscriptions_plan_id_plans_id_fk": {
-          "name": "user_subscriptions_plan_id_plans_id_fk",
-          "tableFrom": "user_subscriptions",
-          "tableTo": "plans",
-          "columnsFrom": [
-            "plan_id"
           ],
           "columnsTo": [
             "id"
@@ -625,6 +708,26 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
+        },
+        "data_retention_days": {
+          "name": "data_retention_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 90
+        },
+        "has_accepted_terms": {
+          "name": "has_accepted_terms",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "terms_accepted_at": {
+          "name": "terms_accepted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -643,46 +746,6 @@
           "nullsNotDistinct": false,
           "columns": [
             "api_key"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.widget_types": {
-      "name": "widget_types",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "widget_types_name_unique": {
-          "name": "widget_types_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
           ]
         }
       },
@@ -713,9 +776,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "type_id": {
-          "name": "type_id",
-          "type": "uuid",
+        "type": {
+          "name": "type",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -737,6 +800,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
+        },
+        "allowed_domains": {
+          "name": "allowed_domains",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
         },
         "created_at": {
           "name": "created_at",
@@ -761,19 +831,6 @@
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "widgets_type_id_widget_types_id_fk": {
-          "name": "widgets_type_id_widget_types_id_fk",
-          "tableFrom": "widgets",
-          "tableTo": "widget_types",
-          "columnsFrom": [
-            "type_id"
           ],
           "columnsTo": [
             "id"

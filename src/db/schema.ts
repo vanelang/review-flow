@@ -21,23 +21,26 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   isActive: boolean("is_active").default(true).notNull(),
+  dataRetentionDays: integer("data_retention_days").default(90).notNull(),
+  hasAcceptedTerms: boolean("has_accepted_terms").default(false).notNull(),
+  termsAcceptedAt: timestamp("terms_accepted_at"),
 });
 
 // Plans table
 export const plans = pgTable("plans", {
   id: uuid("id").defaultRandom().primaryKey(),
-  name: text("name").notNull().unique(), // e.g., 'basic', 'pro', 'scale'
-  price: integer("price").notNull(), // Price in cents
-  reviewsLimit: integer("reviews_limit").notNull(),
-  apiCallsLimit: integer("api_calls_limit").notNull(),
-  widgetsLimit: integer("widgets_limit").notNull(),
-  features: jsonb("features").notNull(), // e.g., ["Embedded Forms", "Review APIs"]
+  name: text("name").notNull().unique(),
+  price: integer("price").notNull(),
+  billingPeriod: text("billing_period", { enum: ["monthly", "yearly"] }).notNull(),
+  limits: jsonb("limits").notNull(),
+  features: jsonb("features").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// User Subscriptions table
-export const userSubscriptions = pgTable("user_subscriptions", {
+// Subscriptions table
+export const subscriptions = pgTable("subscriptions", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("user_id")
     .references(() => users.id)
@@ -65,11 +68,12 @@ export const reviews = pgTable("reviews", {
   widgetId: uuid("widget_id")
     .references(() => widgets.id)
     .notNull(),
-  rating: integer("rating").notNull(), // e.g., 1-5
+  rating: integer("rating").notNull(),
   title: text("title"),
   content: text("content").notNull(),
   authorName: text("author_name").notNull(),
   authorEmail: varchar("author_email", { length: 255 }),
+  authorConsent: boolean("author_consent").default(false).notNull(),
   status: text("status", { enum: ["pending", "approved", "rejected"] })
     .default("pending")
     .notNull(),
@@ -77,15 +81,10 @@ export const reviews = pgTable("reviews", {
     .default("direct")
     .notNull(),
   metadata: jsonb("metadata"),
+  ipAddress: varchar("ip_address", { length: 45 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-// Widget Types table
-export const widgetTypes = pgTable("widget_types", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  name: text("name").notNull().unique(), // e.g., 'review-form', 'testimonial', 'rating'
-  description: text("description"),
+  scheduledForDeletion: timestamp("scheduled_for_deletion"),
 });
 
 // Widgets table
@@ -95,60 +94,69 @@ export const widgets = pgTable("widgets", {
     .references(() => users.id)
     .notNull(),
   name: text("name").notNull(),
-  typeId: uuid("type_id")
-    .references(() => widgetTypes.id)
-    .notNull(),
-  config: jsonb("config").notNull(), // JSON configuration for widget behavior
-  styles: jsonb("styles"), // JSON configuration for widget styling
+  type: text("type", { enum: ["review-form", "testimonial", "rating"] }).notNull(),
+  config: jsonb("config").notNull(),
+  styles: jsonb("styles"),
   isActive: boolean("is_active").default(true).notNull(),
+  domains: jsonb("allowed_domains").default([]).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// API Usage table
+// API Usage Tracking
 export const apiUsage = pgTable("api_usage", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
-  endpoint: text("endpoint").notNull(), // e.g., '/api/reviews'
-  method: text("method").notNull(), // e.g., 'GET', 'POST'
+  endpoint: text("endpoint").notNull(),
+  method: text("method").notNull(),
   statusCode: integer("status_code").notNull(),
+  responseTime: integer("response_time"),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
   timestamp: timestamp("timestamp").defaultNow().notNull(),
-  responseTime: integer("response_time"), // in milliseconds
-  ipAddress: varchar("ip_address", { length: 45 }), // IPv6 compatible
 });
 
-// Subscriptions table (if additional data is needed beyond userSubscriptions)
-export const subscriptions = pgTable("subscriptions", {
+// Usage Limits Tracking
+export const usageLimits = pgTable("usage_limits", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("user_id")
     .references(() => users.id)
     .notNull(),
-  planId: uuid("plan_id")
-    .references(() => plans.id)
-    .notNull(),
-  status: text("status", { enum: ["active", "cancelled", "past_due"] })
-    .default("active")
-    .notNull(),
-  currentPeriodStart: timestamp("current_period_start").notNull(),
-  currentPeriodEnd: timestamp("current_period_end").notNull(),
-  cancelAt: timestamp("cancel_at"),
-  canceledAt: timestamp("canceled_at"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-// Usage Logs table (optional: aggregate usage daily/weekly/monthly)
-export const usageLogs = pgTable("usage_logs", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .references(() => users.id)
-    .notNull(),
-  metric: text("metric").notNull(), // e.g., 'reviews', 'api_calls', 'widgets'
-  count: integer("count").default(0).notNull(),
   periodStart: timestamp("period_start").notNull(),
   periodEnd: timestamp("period_end").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  reviewsCount: integer("reviews_count").default(0).notNull(),
+  apiCallsCount: integer("api_calls_count").default(0).notNull(),
+  widgetsCount: integer("widgets_count").default(0).notNull(),
+  lastUpdated: timestamp("last_updated").defaultNow().notNull(),
+});
+
+// Data Processing Consent
+export const dataConsent = pgTable("data_consent", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
+  purpose: text("purpose").notNull(),
+  granted: boolean("granted").default(false).notNull(),
+  grantedAt: timestamp("granted_at"),
+  revokedAt: timestamp("revoked_at"),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+});
+
+// Audit Log
+export const auditLog = pgTable("audit_log", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
+  action: text("action").notNull(),
+  entityType: text("entity_type").notNull(),
+  entityId: uuid("entity_id").notNull(),
+  changes: jsonb("changes"),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
 });
