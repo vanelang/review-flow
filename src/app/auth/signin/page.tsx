@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/components/auth-provider";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignInPage() {
   const [isSignIn, setIsSignIn] = useState(true);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { signIn } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -19,29 +18,25 @@ export default function SignInPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     try {
       if (isSignIn) {
-        // Sign In
-        const response = await fetch("/api/auth/signin", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
+        // Sign In with NextAuth
+        const result = await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || "Failed to sign in");
+        if (result?.error) {
+          toast.error(result.error === "CredentialsSignin" ? "Invalid credentials" : result.error);
+          return;
         }
 
-        await signIn(formData.email, formData.password);
+        toast.success("Signed in successfully");
         router.push("/dashboard");
+        router.refresh();
       } else {
         // Sign Up
         const response = await fetch("/api/auth/signup", {
@@ -56,12 +51,24 @@ export default function SignInPage() {
           throw new Error(data.error || "Failed to create account");
         }
 
-        // Automatically sign in after successful signup
-        await signIn(formData.email, formData.password);
+        // Sign in automatically after successful signup
+        const result = await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          toast.error("Failed to sign in after registration");
+          return;
+        }
+
+        toast.success("Account created successfully");
         router.push("/dashboard");
+        router.refresh();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      toast.error(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -78,13 +85,6 @@ export default function SignInPage() {
           {isSignIn ? "Sign in to access your dashboard" : "Get started with ReviewFlow today"}
         </p>
       </div>
-
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -176,7 +176,6 @@ export default function SignInPage() {
           <button
             onClick={() => {
               setIsSignIn(!isSignIn);
-              setError("");
               setFormData({ email: "", password: "", name: "" });
             }}
             className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
