@@ -1,4 +1,5 @@
 import { Poppins } from "next/font/google";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -11,17 +12,17 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className={`${poppins.className} min-h-screen bg-slate-50 flex`}>
+    <div className={`${poppins.className} min-h-screen bg-slate-50 dark:bg-slate-900 flex`}>
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 fixed h-full">
+      <aside className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 fixed h-full">
         <div className="p-6">
-          <div className="text-2xl font-semibold text-slate-900">ReviewFlow</div>
+          <div className="text-2xl font-semibold text-slate-900 dark:text-white">ReviewFlow</div>
         </div>
         <nav className="mt-6">
           <div className="px-3 space-y-1">
             <a
               href="/dashboard"
-              className="flex items-center px-3 py-2 text-slate-700 rounded-lg bg-slate-100 font-medium"
+              className="flex items-center px-3 py-2 text-slate-700 dark:text-slate-200 rounded-lg bg-slate-100 dark:bg-slate-700 font-medium"
             >
               <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -35,7 +36,7 @@ export default function DashboardLayout({
             </a>
             <a
               href="/dashboard/reviews"
-              className="flex items-center px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-50"
+              className="flex items-center px-3 py-2 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
             >
               <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -49,7 +50,7 @@ export default function DashboardLayout({
             </a>
             <a
               href="/dashboard/widgets"
-              className="flex items-center px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-50"
+              className="flex items-center px-3 py-2 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
             >
               <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -63,7 +64,7 @@ export default function DashboardLayout({
             </a>
             <a
               href="/dashboard/settings"
-              className="flex items-center px-3 py-2 text-slate-600 rounded-lg hover:bg-slate-50"
+              className="flex items-center px-3 py-2 text-slate-600 dark:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
             >
               <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -88,11 +89,12 @@ export default function DashboardLayout({
       {/* Main Content */}
       <main className="flex-1 ml-64">
         {/* Top Navigation */}
-        <div className="bg-white border-b border-slate-200">
+        <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
           <div className="px-8 py-4 flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Dashboard</h1>
             <div className="flex items-center gap-4">
-              <button className="text-slate-600 hover:text-slate-900">
+              <ThemeToggle />
+              <button className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -106,7 +108,7 @@ export default function DashboardLayout({
                 <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
                   JD
                 </div>
-                <span className="text-slate-700">John Doe</span>
+                <span className="text-slate-700 dark:text-slate-200">John Doe</span>
               </div>
             </div>
           </div>

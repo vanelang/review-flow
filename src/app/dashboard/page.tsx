@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 // Mock data for the chart
 const mockChartData = [
@@ -53,47 +54,51 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl border border-slate-200">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-slate-600">Total Reviews</p>
-              <p className="text-2xl font-semibold text-slate-900 mt-2">315</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                Total Reviews
+              </p>
+              <p className="text-2xl font-semibold text-slate-900 dark:text-white mt-2">315</p>
             </div>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
               +12%
             </span>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl border border-slate-200">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-slate-600">API Usage</p>
-              <p className="text-2xl font-semibold text-slate-900 mt-2">8.2k</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">API Usage</p>
+              <p className="text-2xl font-semibold text-slate-900 dark:text-white mt-2">8.2k</p>
             </div>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
               Normal
             </span>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl border border-slate-200">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-slate-600">Active Widgets</p>
-              <p className="text-2xl font-semibold text-slate-900 mt-2">6</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                Active Widgets
+              </p>
+              <p className="text-2xl font-semibold text-slate-900 dark:text-white mt-2">6</p>
             </div>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
               4 slots left
             </span>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl border border-slate-200">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-slate-600">Avg. Rating</p>
-              <p className="text-2xl font-semibold text-slate-900 mt-2">4.8</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Avg. Rating</p>
+              <p className="text-2xl font-semibold text-slate-900 dark:text-white mt-2">4.8</p>
             </div>
             <div className="flex text-yellow-400">
               {[...Array(5)].map((_, i) => (
@@ -108,20 +113,27 @@ export default function DashboardPage() {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl border border-slate-200">
-          <h3 className="text-slate-900 font-semibold mb-4">Review Trends</h3>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+          <h3 className="text-slate-900 dark:text-white font-semibold mb-4">Review Trends</h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={mockChartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="name" stroke="#94a3b8" />
+                <YAxis stroke="#94a3b8" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1e293b",
+                    border: "none",
+                    borderRadius: "0.5rem",
+                    color: "#f8fafc",
+                  }}
+                />
                 <Area
                   type="monotone"
                   dataKey="reviews"
                   stroke="#2563eb"
-                  fill="#dbeafe"
+                  fill="#1d4ed8"
                   name="Reviews"
                 />
               </AreaChart>
@@ -129,20 +141,27 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl border border-slate-200">
-          <h3 className="text-slate-900 font-semibold mb-4">API Usage</h3>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+          <h3 className="text-slate-900 dark:text-white font-semibold mb-4">API Usage</h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={mockChartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="name" stroke="#94a3b8" />
+                <YAxis stroke="#94a3b8" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1e293b",
+                    border: "none",
+                    borderRadius: "0.5rem",
+                    color: "#f8fafc",
+                  }}
+                />
                 <Area
                   type="monotone"
                   dataKey="apiCalls"
                   stroke="#0891b2"
-                  fill="#cffafe"
+                  fill="#0e7490"
                   name="API Calls"
                 />
               </AreaChart>
@@ -152,22 +171,24 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Reviews */}
-      <div className="bg-white rounded-xl border border-slate-200">
-        <div className="p-6 border-b border-slate-200">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-center">
-            <h3 className="text-slate-900 font-semibold">Recent Reviews</h3>
-            <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+            <h3 className="text-slate-900 dark:text-white font-semibold">Recent Reviews</h3>
+            <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
               View all
             </button>
           </div>
         </div>
-        <div className="divide-y divide-slate-200">
+        <div className="divide-y divide-slate-200 dark:divide-slate-700">
           {mockReviews.map((review) => (
             <div key={review.id} className="p-6">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-slate-900">{review.author}</span>
+                    <span className="font-medium text-slate-900 dark:text-white">
+                      {review.author}
+                    </span>
                     <div className="flex items-center text-yellow-400">
                       {[...Array(review.rating)].map((_, i) => (
                         <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -175,11 +196,15 @@ export default function DashboardPage() {
                         </svg>
                       ))}
                     </div>
-                    <span className="text-sm text-slate-500">via {review.source}</span>
+                    <span className="text-sm text-slate-500 dark:text-slate-400">
+                      via {review.source}
+                    </span>
                   </div>
-                  <p className="mt-2 text-slate-600">{review.content}</p>
+                  <p className="mt-2 text-slate-600 dark:text-slate-300">{review.content}</p>
                 </div>
-                <span className="text-sm text-slate-500 whitespace-nowrap ml-6">{review.date}</span>
+                <span className="text-sm text-slate-500 dark:text-slate-400 whitespace-nowrap ml-6">
+                  {review.date}
+                </span>
               </div>
             </div>
           ))}
