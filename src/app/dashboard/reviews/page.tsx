@@ -107,10 +107,13 @@ export default function ReviewsPage() {
       <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
         <div className="divide-y divide-slate-200 dark:divide-slate-700">
           {filteredReviews.map((review) => (
-            <div key={review.id} className="p-6">
-              <div className="flex justify-between items-start">
+            <div
+              key={review.id}
+              className="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition"
+            >
+              <div className="flex justify-between items-start gap-4">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-3 mb-3">
                     <span className="font-medium text-slate-900 dark:text-white">
                       {review.author}
                     </span>
@@ -122,7 +125,7 @@ export default function ReviewsPage() {
                       ))}
                     </div>
                     <span
-                      className={`text-sm px-2.5 py-0.5 rounded-full font-medium
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                         ${
                           review.status === "approved"
                             ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
@@ -134,26 +137,90 @@ export default function ReviewsPage() {
                     >
                       {review.status.charAt(0).toUpperCase() + review.status.slice(1)}
                     </span>
-                    <span className="text-sm text-slate-500 dark:text-slate-400">
+                    <span className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                      <span className="inline-block w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500" />
                       via {review.source}
                     </span>
                   </div>
-                  <p className="text-slate-600 dark:text-slate-300">{review.content}</p>
+                  <p className="text-slate-600 dark:text-slate-300 mb-4">{review.content}</p>
+
+                  {/* Action Buttons for Pending Reviews */}
+                  {review.status === "pending" && (
+                    <div className="flex gap-2">
+                      <button
+                        className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 
+                          bg-blue-700 text-white rounded-lg hover:bg-blue-800 
+                          transition-colors shadow-sm"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        Approve
+                      </button>
+                      <button
+                        className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 
+                          bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 
+                          border border-slate-200 dark:border-slate-700 rounded-lg 
+                          hover:bg-slate-50 dark:hover:bg-slate-700 
+                          transition-colors shadow-sm"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                        Reject
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <span className="text-sm text-slate-500 dark:text-slate-400">{review.date}</span>
-                  <div className="flex gap-2">
-                    {review.status === "pending" && (
-                      <>
-                        <button className="text-sm px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition">
-                          Approve
-                        </button>
-                        <button className="text-sm px-3 py-1 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition">
-                          Reject
-                        </button>
-                      </>
-                    )}
-                  </div>
+
+                {/* Date and Menu - updated styles */}
+                <div className="flex items-center gap-3 mt-4 text-sm text-slate-500 dark:text-slate-400">
+                  <span className="flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    {review.date}
+                  </span>
+                  <button
+                    className="p-1 -m-1 text-slate-400 hover:text-slate-600 
+                      dark:text-slate-500 dark:hover:text-slate-300 
+                      rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 
+                      transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
