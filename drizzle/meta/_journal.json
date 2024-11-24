@@ -15,6 +15,13 @@
       "when": 1732357241638,
       "tag": "0001_superb_rocket_raccoon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732416768131,
+      "tag": "0002_curved_raider",
+      "breakpoints": true
     }
   ]
 }

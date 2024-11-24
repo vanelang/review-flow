@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "auto_approve_reviews" boolean DEFAULT false NOT NULL;

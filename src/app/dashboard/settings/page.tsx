@@ -10,10 +10,12 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 interface UserProfile {
+  id: string;
   name: string;
   email: string;
   companyName: string | null;
   apiKey: string;
+  autoApproveReviews: boolean;
 }
 
 // Add this new component for the skeleton loading
@@ -165,6 +167,29 @@ export default function SettingsPage() {
     }
   };
 
+  // Handle preference update
+  const handlePreferenceUpdate = async (autoApprove: boolean) => {
+    try {
+      const response = await fetch("/api/users/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          autoApproveReviews: autoApprove,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update preference");
+      }
+
+      setProfile((prev) => (prev ? { ...prev, autoApproveReviews: autoApprove } : null));
+      toast.success("Preference updated successfully");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to update preference");
+    }
+  };
+
   if (loading) {
     return <SettingsSkeleton />;
   }
@@ -286,15 +311,23 @@ export default function SettingsPage() {
           <div className="mt-4">
             <button
               onClick={handleGenerateApiKey}
-              className="text-sm text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+              className="inline-flex items-center gap-2 text-sm text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
             >
-              + Generate New API Key
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              Rotate API Key
             </button>
           </div>
         </div>
       </div>
 
-      {/* Preferences Section */}
+      {/* Preferences Section - Updated */}
       <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
         <div className="p-6 border-b border-slate-200 dark:border-slate-700">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Preferences</h2>
@@ -303,35 +336,24 @@ export default function SettingsPage() {
           </p>
         </div>
         <div className="p-6 space-y-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Email Notifications
-                </p>
-                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                  Receive notifications for new reviews
-                </p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-blue-700"></div>
-              </label>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                Auto-approve Reviews
+              </p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Automatically approve new reviews
+              </p>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Auto-approve Reviews
-                </p>
-                <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                  Automatically approve new reviews
-                </p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" />
-                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-blue-700"></div>
-              </label>
-            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={profile?.autoApproveReviews}
+                onChange={(e) => handlePreferenceUpdate(e.target.checked)}
+              />
+              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-blue-700"></div>
+            </label>
           </div>
         </div>
       </div>

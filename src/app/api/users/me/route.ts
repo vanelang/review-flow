@@ -6,11 +6,14 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 // Validation schema for profile updates
-const updateProfileSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  companyName: z.string().optional(),
-});
+const updateProfileSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters").optional(),
+    email: z.string().email("Invalid email address").optional(),
+    companyName: z.string().optional(),
+    autoApproveReviews: z.boolean().optional(),
+  })
+  .partial();
 
 export async function GET() {
   try {
@@ -28,6 +31,7 @@ export async function GET() {
         companyName: true,
         apiKey: true,
         isActive: true,
+        autoApproveReviews: true,
       },
     });
 
@@ -56,12 +60,12 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: result.error.errors[0].message }, { status: 400 });
     }
 
-    const { name, email, companyName } = result.data;
+    const updateData = result.data;
 
-    // Check if email is already taken by another user
-    if (email !== session.user.email) {
+    // Check if email is being updated and is already taken
+    if (updateData.email && updateData.email !== session.user.email) {
       const existingUser = await db.query.users.findFirst({
-        where: eq(users.email, email),
+        where: eq(users.email, updateData.email),
       });
 
       if (existingUser) {
@@ -72,9 +76,7 @@ export async function PATCH(request: Request) {
     const [updatedUser] = await db
       .update(users)
       .set({
-        name,
-        email,
-        companyName,
+        ...updateData,
         updatedAt: new Date(),
       })
       .where(eq(users.id, session.user.id))
@@ -83,6 +85,7 @@ export async function PATCH(request: Request) {
         name: users.name,
         email: users.email,
         companyName: users.companyName,
+        autoApproveReviews: users.autoApproveReviews,
       });
 
     return NextResponse.json(updatedUser);

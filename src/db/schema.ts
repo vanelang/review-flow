@@ -25,6 +25,7 @@ export const users = pgTable("users", {
   hasAcceptedTerms: boolean("has_accepted_terms").default(false).notNull(),
   termsAcceptedAt: timestamp("terms_accepted_at"),
   password: text("password").notNull(),
+  autoApproveReviews: boolean("auto_approve_reviews").default(false).notNull(),
 });
 
 // Plans table
