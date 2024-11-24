@@ -1,43 +1,182 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
-// Mock data for widgets
-const mockWidgets = [
-  {
-    id: 1,
-    name: "Product Reviews",
-    type: "review-form",
-    status: "active",
-    lastUpdated: "2024-03-15",
-    totalReviews: 128,
-    description: "Main product review collection form",
-    domains: ["example.com", "store.example.com"],
-  },
-  {
-    id: 2,
-    name: "Testimonials Slider",
-    type: "testimonial",
-    status: "active",
-    lastUpdated: "2024-03-14",
-    totalReviews: 45,
-    description: "Homepage testimonials carousel",
-    domains: ["example.com"],
-  },
-  {
-    id: 3,
-    name: "Rating Badge",
-    type: "rating",
-    status: "inactive",
-    lastUpdated: "2024-03-10",
-    totalReviews: 89,
-    description: "Product page rating display",
-    domains: ["store.example.com"],
-  },
-];
+interface Widget {
+  id: string;
+  name: string;
+  type: "review-form" | "testimonial" | "rating";
+  config: Record<string, any>;
+  styles?: Record<string, any>;
+  domains: string[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CreateWidgetData {
+  name: string;
+  type: "review-form" | "testimonial" | "rating";
+  domains: string[];
+  config: Record<string, any>;
+}
+
+// Add this new component for the skeleton loading
+function WidgetsSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Header Skeleton */}
+      <div className="flex justify-between items-center">
+        <div>
+          <div className="h-8 w-32 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+          <div className="mt-1 h-4 w-64 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+        </div>
+        <div className="h-10 w-32 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+      </div>
+
+      {/* Widgets Grid Skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 
+              dark:border-slate-700 p-6 animate-pulse"
+          >
+            {/* Widget Header Skeleton */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="space-y-2">
+                <div className="h-6 w-32 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+              </div>
+              <div className="h-6 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
+            </div>
+
+            {/* Widget Info Skeleton */}
+            <div className="space-y-4">
+              {/* Type Skeleton */}
+              <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700 rounded" />
+
+              {/* Domains Skeleton */}
+              <div className="flex flex-wrap gap-2">
+                {[1, 2].map((j) => (
+                  <div key={j} className="h-6 w-24 bg-slate-200 dark:bg-slate-700 rounded-md" />
+                ))}
+              </div>
+
+              {/* Actions Skeleton */}
+              <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-700">
+                <div className="h-4 w-32 bg-slate-200 dark:bg-slate-700 rounded" />
+                <div className="h-8 w-8 bg-slate-200 dark:bg-slate-700 rounded" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function WidgetsPage() {
+  const [widgets, setWidgets] = useState<Widget[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [formData, setFormData] = useState<CreateWidgetData>({
+    name: "",
+    type: "review-form",
+    domains: [],
+    config: {},
+  });
+  const [submitting, setSubmitting] = useState(false);
+
+  // Fetch widgets
+  useEffect(() => {
+    async function fetchWidgets() {
+      try {
+        const response = await fetch("/api/widgets");
+        if (!response.ok) throw new Error("Failed to fetch widgets");
+        const data = await response.json();
+        setWidgets(data);
+      } catch (error) {
+        toast.error("Failed to load widgets");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchWidgets();
+  }, []);
+
+  // Create widget
+  const handleCreateWidget = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const response = await fetch("/api/widgets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to create widget");
+      }
+
+      const newWidget = await response.json();
+      setWidgets((prev) => [...prev, newWidget]);
+      setShowCreateModal(false);
+      toast.success("Widget created successfully");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to create widget");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Delete widget
+  const handleDeleteWidget = async (widgetId: string) => {
+    if (!confirm("Are you sure you want to delete this widget?")) return;
+
+    try {
+      const response = await fetch(`/api/widgets/${widgetId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete widget");
+
+      setWidgets((prev) => prev.filter((widget) => widget.id !== widgetId));
+      toast.success("Widget deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete widget");
+      console.error(error);
+    }
+  };
+
+  // Toggle widget status
+  const handleToggleStatus = async (widget: Widget) => {
+    try {
+      const response = await fetch(`/api/widgets/${widget.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !widget.isActive }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update widget status");
+
+      const updatedWidget = await response.json();
+      setWidgets((prev) => prev.map((w) => (w.id === widget.id ? updatedWidget : w)));
+      toast.success("Widget status updated");
+    } catch (error) {
+      toast.error("Failed to update widget status");
+      console.error(error);
+    }
+  };
+
+  if (loading) {
+    return <WidgetsSkeleton />;
+  }
 
   return (
     <div className="space-y-6">
@@ -63,11 +202,11 @@ export default function WidgetsPage() {
 
       {/* Widgets Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockWidgets.map((widget) => (
+        {widgets.map((widget) => (
           <div
             key={widget.id}
             className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 
-              dark:border-slate-700 p-6 hover:shadow-lg transition group"
+              dark:border-slate-700 p-6 hover:shadow-lg transition"
           >
             {/* Widget Header */}
             <div className="flex justify-between items-start mb-4">
@@ -75,51 +214,28 @@ export default function WidgetsPage() {
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                   {widget.name}
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  {widget.description}
-                </p>
               </div>
-              <span
+              <button
+                onClick={() => handleToggleStatus(widget)}
                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                   ${
-                    widget.status === "active"
+                    widget.isActive
                       ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                       : "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
                   }`}
               >
-                {widget.status.charAt(0).toUpperCase() + widget.status.slice(1)}
-              </span>
+                {widget.isActive ? "Active" : "Inactive"}
+              </button>
             </div>
 
             {/* Widget Info */}
             <div className="space-y-4">
-              {/* Type and Stats */}
-              <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                    />
-                  </svg>
-                  {widget.type
-                    .split("-")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  {widget.totalReviews} reviews
-                </div>
+              {/* Type */}
+              <div className="text-sm text-slate-500 dark:text-slate-400">
+                {widget.type
+                  .split("-")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ")}
               </div>
 
               {/* Domains */}
@@ -138,24 +254,11 @@ export default function WidgetsPage() {
               {/* Actions */}
               <div className="flex justify-between items-center pt-4 border-t border-slate-200 dark:border-slate-700">
                 <span className="text-sm text-slate-500 dark:text-slate-400">
-                  Updated {widget.lastUpdated}
+                  Updated {new Date(widget.updatedAt).toLocaleDateString()}
                 </span>
                 <div className="flex gap-2">
                   <button
-                    className="p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 
-                      dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 
-                      transition"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                  </button>
-                  <button
+                    onClick={() => handleDeleteWidget(widget.id)}
                     className="p-2 text-slate-600 dark:text-slate-400 hover:text-red-600 
                       dark:hover:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 
                       transition"
@@ -183,17 +286,18 @@ export default function WidgetsPage() {
             <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
               Create New Widget
             </h2>
-            <form className="space-y-4">
+            <form onSubmit={handleCreateWidget} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Widget Name
                 </label>
                 <input
                   type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 
-                    bg-white dark:bg-slate-800 text-slate-900 dark:text-white 
-                    focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-transparent"
-                  placeholder="Enter widget name"
+                    bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                  required
                 />
               </div>
               <div>
@@ -201,9 +305,16 @@ export default function WidgetsPage() {
                   Widget Type
                 </label>
                 <select
+                  value={formData.type}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      type: e.target.value as "review-form" | "testimonial" | "rating",
+                    })
+                  }
                   className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 
-                    bg-white dark:bg-slate-800 text-slate-900 dark:text-white 
-                    focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-transparent"
+                    bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                  required
                 >
                   <option value="review-form">Review Form</option>
                   <option value="testimonial">Testimonial</option>
@@ -212,14 +323,21 @@ export default function WidgetsPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Description
+                  Domains (comma-separated)
                 </label>
-                <textarea
+                <input
+                  type="text"
+                  value={formData.domains.join(", ")}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      domains: e.target.value.split(",").map((d) => d.trim()),
+                    })
+                  }
                   className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 
-                    bg-white dark:bg-slate-800 text-slate-900 dark:text-white 
-                    focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-transparent"
-                  placeholder="Enter widget description"
-                  rows={3}
+                    bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                  placeholder="example.com, store.example.com"
+                  required
                 />
               </div>
               <div className="flex justify-end gap-4 mt-6">
@@ -233,10 +351,11 @@ export default function WidgetsPage() {
                 </button>
                 <button
                   type="submit"
+                  disabled={submitting}
                   className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 
-                    transition font-medium"
+                    transition font-medium disabled:opacity-50"
                 >
-                  Create Widget
+                  {submitting ? "Creating..." : "Create Widget"}
                 </button>
               </div>
             </form>
