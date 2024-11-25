@@ -1,22 +1,19 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { colorClasses } from "@/config/colors";
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className={`min-h-screen flex flex-col ${colorClasses.background.primary} dark:bg-slate-900`}
-    >
+    <div className={`min-h-screen flex flex-col ${colorClasses.background.primary}`}>
       {/* Navigation Bar */}
       <nav
-        className={`sticky top-0 z-50 ${colorClasses.background.primary} dark:bg-slate-800 ${colorClasses.border.light} dark:border-slate-700 border-b`}
+        className={`sticky top-0 z-50 ${colorClasses.background.primary} ${colorClasses.border.light} border-b`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
               <div
-                className={`w-8 h-8 ${colorClasses.button.primary.background} dark:bg-blue-500 rounded-lg flex items-center justify-center shadow-lg`}
+                className={`w-8 h-8 ${colorClasses.button.primary.background} rounded-lg flex items-center justify-center shadow-lg`}
               >
                 <svg
                   className="w-5 h-5 text-white"
@@ -32,14 +29,13 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                   />
                 </svg>
               </div>
-              <span className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">
+              <span className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                 ReviewFlow
               </span>
             </Link>
 
             {/* Right Side Nav */}
             <div className="flex items-center gap-4">
-              <ThemeToggle />
               <Link
                 href="/dashboard"
                 className={`hidden sm:inline-flex items-center gap-2 ${colorClasses.button.primary.background} ${colorClasses.button.primary.text} px-4 py-2 rounded-lg ${colorClasses.button.primary.hover} transition font-medium text-sm`}
@@ -51,36 +47,127 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         </div>
       </nav>
 
-      {/* Main Content */}
-      <main className="flex-1">{children}</main>
+      {/* Main Content with Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+          {/* Sidebar */}
+          <div className="hidden lg:block lg:col-span-3">
+            <nav className="sticky top-24 space-y-10">
+              {/* Getting Started Section */}
+              <div className="space-y-3">
+                <h2 className="text-[11px] font-semibold text-slate-900 uppercase tracking-wide">
+                  Getting Started
+                </h2>
+                <div className="flex flex-col space-y-2">
+                  <Link
+                    href="/docs"
+                    className="text-blue-600 text-sm font-medium hover:text-blue-700"
+                  >
+                    Introduction
+                  </Link>
+                  <Link
+                    href="/docs/quickstart"
+                    className="text-slate-700 text-sm hover:text-slate-900"
+                  >
+                    Quick Start Guide
+                  </Link>
+                  <Link
+                    href="/docs/components"
+                    className="text-slate-700 text-sm hover:text-slate-900"
+                  >
+                    Components
+                  </Link>
+                </div>
+              </div>
+
+              {/* Components Section */}
+              <div className="space-y-3">
+                <h2 className="text-[11px] font-semibold text-slate-900 uppercase tracking-wide">
+                  Components
+                </h2>
+                <div className="flex flex-col space-y-2">
+                  <Link
+                    href="/docs/basic-components"
+                    className="text-slate-700 text-sm hover:text-slate-900 pl-2 border-l border-slate-200"
+                  >
+                    Basic Components
+                  </Link>
+                  <Link
+                    href="/docs/advanced-components"
+                    className="text-slate-700 text-sm hover:text-slate-900 pl-2 border-l border-slate-200"
+                  >
+                    Advanced Components
+                  </Link>
+                  <Link
+                    href="/docs/customizing"
+                    className="text-slate-700 text-sm hover:text-slate-900 pl-2 border-l border-slate-200"
+                  >
+                    Customizing Components
+                  </Link>
+                  <Link
+                    href="/docs/third-party"
+                    className="text-slate-700 text-sm hover:text-slate-900 pl-2 border-l border-slate-200"
+                  >
+                    Third-Party Components
+                  </Link>
+                </div>
+              </div>
+
+              {/* Security Section */}
+              <div className="space-y-3">
+                <h2 className="text-[11px] font-semibold text-slate-900 uppercase tracking-wide">
+                  Security
+                </h2>
+                <div className="flex flex-col space-y-2">
+                  <Link
+                    href="/docs/security"
+                    className="text-slate-700 text-sm hover:text-slate-900"
+                  >
+                    Overview of security
+                  </Link>
+                  <Link
+                    href="/docs/security/prevention"
+                    className="text-slate-700 text-sm hover:text-slate-900"
+                  >
+                    Prevention of attacks
+                  </Link>
+                  <Link
+                    href="/docs/security/testing"
+                    className="text-slate-700 text-sm hover:text-slate-900"
+                  >
+                    Security testing
+                  </Link>
+                </div>
+              </div>
+            </nav>
+          </div>
+
+          {/* Main Content */}
+          <main className="lg:col-span-9">{children}</main>
+        </div>
+      </div>
 
       {/* Footer */}
       <footer
-        className={`${colorClasses.background.primary} dark:bg-slate-800 ${colorClasses.border.light} dark:border-slate-700 border-t`}
+        className={`${colorClasses.background.primary} ${colorClasses.border.light} border-t`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <p className={`text-sm ${colorClasses.text.tertiary} dark:text-slate-400`}>
+            <p className="text-sm text-slate-500">
               © {new Date().getFullYear()} ReviewFlow. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
-              <Link
-                href="/privacy"
-                className={`text-sm ${colorClasses.text.tertiary} hover:${colorClasses.text.primary} dark:text-slate-400 dark:hover:text-white`}
-              >
+              <Link href="/privacy" className="text-sm text-slate-500 hover:text-slate-900">
                 Privacy
               </Link>
-              <Link
-                href="/terms"
-                className={`text-sm ${colorClasses.text.tertiary} hover:${colorClasses.text.primary} dark:text-slate-400 dark:hover:text-white`}
-              >
+              <Link href="/terms" className="text-sm text-slate-500 hover:text-slate-900">
                 Terms
               </Link>
               <a
                 href="https://github.com/your-repo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${colorClasses.text.tertiary} hover:${colorClasses.text.primary} dark:text-slate-400 dark:hover:text-slate-300`}
+                className="text-slate-500 hover:text-slate-900"
               >
                 <span className="sr-only">GitHub</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
