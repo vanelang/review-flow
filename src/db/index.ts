@@ -2,9 +2,6 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { neon, neonConfig } from "@neondatabase/serverless";
 import * as schema from "./schema";
 
-// Configure neon to use connection pooling
-neonConfig.fetchConnectionCache = true;
-
 // Ensure DATABASE_URL is defined
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not defined");

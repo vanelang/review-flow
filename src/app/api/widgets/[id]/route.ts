@@ -5,6 +5,31 @@ import { eq, and } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+export async function GET(request: Request, context: { params: { id: string } }) {
+  const { id } = await Promise.resolve(context.params);
+
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const [widget] = await db
+      .select()
+      .from(widgets)
+      .where(and(eq(widgets.id, id), eq(widgets.userId, session.user.id)));
+
+    if (!widget) {
+      return new NextResponse("Widget not found", { status: 404 });
+    }
+
+    return NextResponse.json(widget);
+  } catch (error) {
+    console.error("Error fetching widget:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
+
 const updateWidgetSchema = z.object({
   name: z.string().min(2).optional(),
   type: z.enum(["review-form", "testimonial", "rating"]).optional(),

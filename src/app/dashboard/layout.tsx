@@ -187,7 +187,7 @@ export default function DashboardLayout({
       {/* Main Content */}
       <main className="flex-1 ml-64">
         {/* Top Navigation */}
-        <div className="bg-white py-1 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
           <div className="px-8 py-4 flex items-center justify-between">
             <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Dashboard</h1>
             <div className="flex items-center gap-4">
@@ -236,8 +236,8 @@ export default function DashboardLayout({
           </div>
         </div>
 
-        {/* Page Content */}
-        <div className="p-8">{children}</div>
+        {/* Page Content - Removed padding */}
+        <div>{children}</div>
       </main>
     </div>
   );
