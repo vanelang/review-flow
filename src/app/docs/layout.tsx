@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { colorClasses } from "@/config/colors";
+import DocsSidebar from "./components/DocsSidebar";
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -52,94 +53,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           {/* Sidebar */}
           <div className="hidden lg:block lg:col-span-3">
-            <nav className="sticky top-24 space-y-10">
-              {/* Getting Started Section */}
-              <div className="space-y-3">
-                <h2 className="text-[11px] font-semibold text-slate-900 uppercase tracking-wide">
-                  Getting Started
-                </h2>
-                <div className="flex flex-col space-y-2">
-                  <Link
-                    href="/docs"
-                    className="text-blue-600 text-sm font-medium hover:text-blue-700"
-                  >
-                    Introduction
-                  </Link>
-                  <Link
-                    href="/docs/quickstart"
-                    className="text-slate-700 text-sm hover:text-slate-900"
-                  >
-                    Quick Start Guide
-                  </Link>
-                  <Link
-                    href="/docs/components"
-                    className="text-slate-700 text-sm hover:text-slate-900"
-                  >
-                    Components
-                  </Link>
-                </div>
-              </div>
-
-              {/* Components Section */}
-              <div className="space-y-3">
-                <h2 className="text-[11px] font-semibold text-slate-900 uppercase tracking-wide">
-                  Components
-                </h2>
-                <div className="flex flex-col space-y-2">
-                  <Link
-                    href="/docs/basic-components"
-                    className="text-slate-700 text-sm hover:text-slate-900 pl-2 border-l border-slate-200"
-                  >
-                    Basic Components
-                  </Link>
-                  <Link
-                    href="/docs/advanced-components"
-                    className="text-slate-700 text-sm hover:text-slate-900 pl-2 border-l border-slate-200"
-                  >
-                    Advanced Components
-                  </Link>
-                  <Link
-                    href="/docs/customizing"
-                    className="text-slate-700 text-sm hover:text-slate-900 pl-2 border-l border-slate-200"
-                  >
-                    Customizing Components
-                  </Link>
-                  <Link
-                    href="/docs/third-party"
-                    className="text-slate-700 text-sm hover:text-slate-900 pl-2 border-l border-slate-200"
-                  >
-                    Third-Party Components
-                  </Link>
-                </div>
-              </div>
-
-              {/* Security Section */}
-              <div className="space-y-3">
-                <h2 className="text-[11px] font-semibold text-slate-900 uppercase tracking-wide">
-                  Security
-                </h2>
-                <div className="flex flex-col space-y-2">
-                  <Link
-                    href="/docs/security"
-                    className="text-slate-700 text-sm hover:text-slate-900"
-                  >
-                    Overview of security
-                  </Link>
-                  <Link
-                    href="/docs/security/prevention"
-                    className="text-slate-700 text-sm hover:text-slate-900"
-                  >
-                    Prevention of attacks
-                  </Link>
-                  <Link
-                    href="/docs/security/testing"
-                    className="text-slate-700 text-sm hover:text-slate-900"
-                  >
-                    Security testing
-                  </Link>
-                </div>
-              </div>
-            </nav>
+            <DocsSidebar />
           </div>
 
           {/* Main Content */}
